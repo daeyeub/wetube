@@ -1,33 +1,26 @@
 import express from "express";
+import morgan from "morgan";
 
 const PORT=7000;
 
 const app=express();
+const logger = morgan("dev");
 
-const logger=(req, res, next)=>{
-    console.log(`${req.method} ${req.url}`);
-    next();
+const home = (req, res) => {
+    return res.send("hello"); 
 };
 
-const privateMiddleware =(req, res, next)=>{
-    const url=req.url;
-    if(url==="/protected"){
-        return res.send("<h1>Not Allowed</h1>");
-    }
-    next();
-}
-
-const handleHome =(req, res)=>{
-    return res.send("I still love you.");
+const login = (req, res) => {
+    return res.send("login");
 };
+
 app.use(logger);
-app.use(privateMiddleware);
-
-app.get("/" ,handleHome);
+app.get("/", home);
+app.get("/login", login);
 
 
 const handleListening=()=>{
-    console.log(`Server listening on port http://localhost:${PORT}`);
+    console.log(`✅ Server listening on port http://localhost:${PORT}`);
 };
 
 app.listen(PORT,handleListening);
